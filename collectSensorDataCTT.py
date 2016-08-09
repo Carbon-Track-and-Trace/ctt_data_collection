@@ -73,7 +73,7 @@ def run():
     init_data(db_ctt)
     
     # collect and store historical data for node '02032201' directly from file
-    archive = '../DATA/02032201.json'
+    archive = '../Data_archives/02032201.json'
     with open(archive) as json_data:
         oldMsg = json.load(json_data)
         tt = len(oldMsg)
