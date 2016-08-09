@@ -60,9 +60,10 @@ def open_connection(database=CTTDB, port=MAPIPORT, hostname=TSTHOSTNAME,
             raise serr
             # connection refused
             # handle here
-        print "You maybe forgot to start monetdb, try this command:"
-        print "\tmonetdbd start <fullpath/to/monetdb/databases>"
-        print "like this example:\n\tmonetdbd start /home/patechoc/monetdb"
+        msg  = "You maybe forgot to start monetdb, try this command:"
+        msg += "\tmonetdbd start <fullpath/to/monetdb/databases>"
+        msg += "like this example:\n\tmonetdbd start /home/patechoc/monetdb"
+        logging.critical(msg)
         sys.exit()
     return db
 
@@ -72,13 +73,15 @@ def backup_DB(backup_path):
         os.makedirs(backup_path)
 
     # msqldump --database=ctt --user=co2 --describe > /tmp/2016-07-19_backupMyDB.sql
-    print "Dump Schema: enter password for accessing CTT database with user 'co2'"
+    msg = "Dump Schema: enter password for accessing CTT database with user 'co2'"
+    logging.info(msg)
     filepath = backup_path + "/" + str(today) + "_backupSchemaDB.sql"
     command = "msqldump --database=ctt --user=co2 --describe > "+ filepath
     os.system(command)
 
     # mclient -u co2 -d ctt --dump > /tmp/2016-07-19_dump.sql
-    print "Dump database: enter password for accessing CTT database with user 'co2'"
+    msg = "Dump database: enter password for accessing CTT database with user 'co2'"
+    logging.info(msg)
     filepath = backup_path + "/" + str(today) + "_backupDataDB.sql"
     command = "mclient -u co2 -d ctt --dump > " + filepath
     os.system(command)
@@ -107,7 +110,8 @@ def delete_table(db, tableName, doCommit = False):
     create_table_extra = 'CASCADE'
     if not(table_exists(db, tableName)):
         if DEBUG:
-            print "table %s does not exist" % (tableName)
+            msg = "table %s does not exist" % (tableName)
+            logging.info(msg)
         return False
     cursor = db.cursor()
     cursor.execute('DROP TABLE %s %s' %
@@ -126,7 +130,8 @@ def create_table(db, tableName, columndefs, doCommit = False):
     create_table_extra = ''
     if table_exists(db, tableName):
         if DEBUG:
-            print "table %s already exists" % (tableName)
+            msg = "table %s already exists" % (tableName)
+            logging.info(msg)
         return False
     cursor = db.cursor()
     cursor.execute('CREATE TABLE %s (%s) %s' %
@@ -144,19 +149,21 @@ def add_table_column(db, tableName, columndef, doCommit = True):
     # e.g. columndef = 'col2 VARCHAR(255)'
     if not(table_exists(db, tableName)):
         if DEBUG:
-            print "table %s does not exist: unable to add a column to it" % (tableName)
+            msg = "table %s does not exist: unable to add a column to it" % (tableName)
+            logging.info(msg)
         return False
     cursor = db.cursor()
     # alter table a add column b2 double;
     query = 'ALTER TABLE {tab} ADD COLUMN {cDef}'.format(tab=tableName, cDef=columndef)
     try:
         if DEBUG:
-            print query
+            logging.info(query)
         cursor.execute(query)
     except pymonetdb.exceptions.OperationalError:
         if DEBUG:
-            print 'The colum "{c}" already exists in table {tab}!\n'.format(c=columndef,
+            msg = 'The colum "{c}" already exists in table {tab}!\n'.format(c=columndef,
                                                                         tab=tableName)
+            logging.info(msg)
         db.rollback()
     if doCommit:
         db.commit()
@@ -183,8 +190,7 @@ def add_entries(db, tableName, listDict, commit=True):
         insert_statement += '({f_list}) '.format(f_list=','.join(s.encode(encoding='UTF-8',errors='strict') for s in fields))
         insert_statement += 'VALUES ({valFields}) '.format(valFields=','.join(["'"+str(entry[f]).encode(encoding='UTF-8',errors='strict')+"'" for f in fields]))
         if DEBUG:
-            print
-            print insert_statement
+            logging.info("\n" + insert_statement)
         cursor = db.cursor()
         #cursor.executemany(insert_statement, data)
         cursor.execute(insert_statement)
@@ -202,7 +208,7 @@ def update_entry(db, tableName, entryDict, whereKey, commit=True):
     update_query += " {keyValuePairs}".format(keyValuePairs=', '.join(keyValuePairs))
     update_query += " WHERE {key}='{val}'".format(key=whereKey, val=str(entryDict[whereKey]).encode(encoding='UTF-8',errors='strict'))
     if DEBUG:
-        print update_query
+        logging.info("\n" + update_query)
     cursor = db.cursor()
     cursor.execute(update_query)
     if commit == True:
@@ -223,13 +229,15 @@ def check_data_integrity(db, columndefs, generatorX):
     # verify
     cursor.execute('select * from %s' % tableName)
     l = cursor.fetchall()
-    print "%(nbRows)03d should be equal to %(rows)03d" % {"nbRows":len(l),
-                                                              "rows":rows}
+    msg = "%(nbRows)03d should be equal to %(rows)03d" % {"nbRows":len(l),
+                                                          "rows":rows}
+    logging.info(msg)
     try:
         for i in range(rows):
             for j in range(len(columndefs)):
-                print "%(ind)03d should be equal to %(gen)03d" % {"ind":l[i][j],
+                msg = "%(ind)03d should be equal to %(gen)03d" % {"ind":l[i][j],
                                                                   "gen":generator(i,j)}
+                logging.info(msg)
     finally:
         cursor.execute('DROP TABLE %s' % (tableName))
 
@@ -262,8 +270,9 @@ def test_create_table(db, tableName):
     l = cursor.fetchall()
     if DEBUG:
         pprint.pprint(l)
-        print "%(fetchedAll)03d should be equal to %(rows)03d" % {"fetchedAll":len(l),
+        msg = "%(fetchedAll)03d should be equal to %(rows)03d" % {"fetchedAll":len(l),
                                                                   "rows":rows}
+        logging.debug(msg)
 
 def test_delete_table(db, tableName):
     delete_table(db, tableName)
@@ -460,15 +469,16 @@ def add_constraint(db, tableName, nameConstraint, typeTableConstraint,
         elif string.lower(typeTableConstraint).strip() == "unique":
             query += " (" + ", ".join(uniqueCols) + ") "
         if DEBUG:
-            print query
+            logging.info(query)
         cursor = db.cursor()
         cursor.execute(query)
         if commit == True:
             db.commit()
     else:
         if DEBUG:
-            print "constraint '{const}' already exists in table '{table}'".format(const=nameConstraint,
-                                                                                  table=tableName)
+        msg = "constraint '{const}' already exists in table '{table}'".format(const=nameConstraint,
+                                                                              table=tableName)
+        logging.info(msg)
 
 def add_location(db, placename, description=None,
                  latitude=None, longitude=None, altitude=None,
@@ -480,8 +490,9 @@ def add_location(db, placename, description=None,
     fieldsNotNone = [f for f in location.keys() if location[f] != None]
     locations = [dict((k, location[k]) for k in fieldsNotNone)]
     if DEBUG:
-        print "add location: "
-        pprint.pprint(locations[0])
+        msg = "add location: "
+        logging.info(msg)
+        logging.info(locations[0])
     add_entries(db, tableName="co2.locations", listDict=locations, commit=True)
 
 
@@ -501,7 +512,7 @@ def upsert_location(db, placename, description=None,
     else:
         query = "SELECT * FROM co2.locations WHERE placename='{m}'  LIMIT 1".format(m=placename)
     if DEBUG:
-        print query
+        logging.info(query)
     res = get_result_SQLquery(db, query, commit=True)
     # add the new entry
     if len(res) == 0:
@@ -528,13 +539,15 @@ def add_gateway(db, gateway_eui, placename="", latitude=None, longitude=None,
     gateways=[{'gateway_eui':gateway_eui,
               'location_id':res[0]['id']}]
     if DEBUG:
-        print "add gateway: "
+        msg = "add gateway: "
+        logging.info(msg)
         pprint.pprint(gateways[0])
     try:
         add_entries(db, tableName="co2.gateways", listDict=gateways, commit=True)
     except pymonetdb.exceptions.IntegrityError:
         if DEBUG:
-            print 'The gateway "{g}" already exists!\n'.format(g=gateway_eui)
+            msg = 'The gateway "{g}" already exists!\n'.format(g=gateway_eui)
+            logging.info(msg)
         db.rollback()
         
     
@@ -556,13 +569,15 @@ def add_node(db, node_eui, placename="", datarate=None,
     fieldsNotNone = [f for f in node.keys() if node[f] != None]
     nodes = [dict((k, node[k]) for k in fieldsNotNone)]
     if DEBUG:
-        print "add node: "
+        msg = "add node: "
+        logging.info(msg)
         pprint.pprint(nodes[0])
     try:
         add_entries(db, tableName="co2.nodes", listDict=nodes, commit=True)
     except pymonetdb.exceptions.IntegrityError:
         if DEBUG:
-            print "The node '{n}' already exists".format(n=node_eui)
+            msg = "The node '{n}' already exists".format(n=node_eui)
+            logging.info(msg)
         db.rollback()
 
 
@@ -623,13 +638,15 @@ def add_node_message(db, msg, commit=False):
     fieldsNotNone = [f for f in node_msg.keys() if node_msg[f] != None]
     node_messages = [dict((k.lower(), node_msg[k]) for k in fieldsNotNone)]
     if DEBUG:
-        print "add node message: "
+        msg = "add node message: "
+        logging.info(msg)
         pprint.pprint(node_messages[0])
     try:
         add_entries(db, tableName="co2.node_msg", listDict=node_messages, commit=True)
     except pymonetdb.exceptions.IntegrityError:
         if DEBUG:
-            print "The node '{n}' already exists".format(n=node_eui)
+            msg = "The node '{n}' already exists".format(n=node_eui)
+            logging.info(msg)
         db.rollback()
 
 
@@ -707,15 +724,17 @@ def tests():
     create_CTT_tables(db_ctt)
     cursor = db_ctt.cursor()
     if DEBUG:
-        print "Table 'locations' exists? ", table_exists(db_ctt, "locations")
+        msg = "Table 'locations' exists? ", table_exists(db_ctt, "locations")
+        logging.info(msg)
     tableName = "node_msg"
     if DEBUG:
-        print "Description table 'node_msg'"
+        msg = "Description table 'node_msg'"
+        logging.info(msg)
         pprint.pprint( get_description_table(db_ctt, tableName))
     query = "select * from co2.node_msg WHERE 1=0"
     if DEBUG:
-        print get_result_SQLquery(db_ctt, query)
-        print get_foreign_keys(db_ctt)
+        logging.info(get_result_SQLquery(db_ctt, query))
+        logging.info(get_foreign_keys(db_ctt))
     locations = [{'placename':'Studentersamfundet',
                   'description':'gateway_AA555A0008060252',
                   'latitude':63.422511, 'longitude':10.395165},
