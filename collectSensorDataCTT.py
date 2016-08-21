@@ -43,10 +43,10 @@ def init_data(db_ctt):
 
     # CTT NODES
     global node_IDs
-    node_IDs = ["02032220",
+    node_IDs = ["02032201",
+                "02032220",
                 "02032221",
-                "02032222",
-                "02032201"]
+                "02032222"]
     for id in node_IDs:
         mdb.add_node(db=db_ctt, node_eui=id, placename='node_'+id)
 
@@ -64,32 +64,37 @@ def run():
     
     ## backup DB if exists
     #mdb.backup_DB(backup_path="/tmp/")
+    #sys.exit()
 
     ## create tables if missing
-    mdb.drop_CTT_tables(db_ctt)
+    #mdb.drop_CTT_tables(db_ctt)
     db_ctt.commit()
     mdb.create_CTT_tables(db_ctt)
     db_ctt.commit()
     init_data(db_ctt)
     
     # collect and store historical data for node '02032201' directly from file
-    archive = '../Data_archives/02032201.json'
-    with open(archive) as json_data:
-        oldMsg = json.load(json_data)
-        tt = len(oldMsg)
-        for m, msgMQTT in enumerate(oldMsg):
-            print "msg #{m}/{t}".format(m=m, t=tt)
-            base64EncodedPayload = CTT_Nodes.decode_msg_payload(msgMQTT['data'])
-            payload = CTT_Nodes.extract_payload(base64EncodedPayload)
-            msgMQTT.update(payload)
-            msgDict = mqtt.map_msg_MQTT_to_monetdb(msgMQTT)
-            if DEBUG:
-                pprint.pprint(msgDict)
-            if db_ctt != None:
-                mdb.add_node_message(db=db_ctt, msg=msgDict)
-                db_ctt.commit()        
-        json_data.close()
-
+    archives = ['../Data_archives/02032201.json',
+                '/home/patechoc/Documents/CODE-DEV/AIA/Project_Carbon-Track-and-Trace/CTT_dashboard/Data_archives/02032201.json']
+    for archive in archives:
+        try:
+            with open(archive) as json_data:
+                oldMsg = json.load(json_data)
+                tt = len(oldMsg)
+                for m, msgMQTT in enumerate(oldMsg):
+                    print "msg #{m}/{t}".format(m=m, t=tt)
+                    base64EncodedPayload = CTT_Nodes.decode_msg_payload(msgMQTT['data'])
+                    payload = CTT_Nodes.extract_payload(base64EncodedPayload)
+                    msgMQTT.update(payload)
+                    msgDict = mqtt.map_msg_MQTT_to_monetdb(msgMQTT)
+                    if DEBUG:
+                        pprint.pprint(msgDict)
+                    if db_ctt != None:
+                        mdb.add_node_message(db=db_ctt, msg=msgDict)
+                        db_ctt.commit()        
+                json_data.close()
+        except IOError:
+            pass
 
     # collect and store historical data from TTN REST API
     messages = []
@@ -104,19 +109,19 @@ def run():
         mdb.add_node_message(db=db_ctt, msg=msgDict)
         db_ctt.commit()        
 
-    # # collect and store indefinitely real-time data from TTN MQTT Broker
-    # # include log/notifications when important changes occur
-    # #  (new device location, new/lost sensor, new gateway for comm., ... )
-    # topics = ["nodes/"+nID+"/packets" for nID in node_IDs]
-    # mqtt.set_topics(topics)
-    # mqtt.set_db(db_ctt)
-    # mqtt.ctt_collect_MQTT_msg()
+    # collect and store indefinitely real-time data from TTN MQTT Broker
+    # include log/notifications when important changes occur
+    #  (new device location, new/lost sensor, new gateway for comm., ... )
+    topics = ["nodes/"+nID+"/packets" for nID in node_IDs]
+    mqtt.set_topics(topics)
+    mqtt.set_db(db_ctt)
+    mqtt.ctt_collect_MQTT_msg()
     
-    # # Blocking call that processes network traffic, dispatches callbacks and
-    # # handles reconnecting.
-    # # Other loop*() functions are available that give a threaded interface and a
-    # # manual interface.
-    # client.loop_forever()
+    # Blocking call that processes network traffic, dispatches callbacks and
+    # handles reconnecting.
+    # Other loop*() functions are available that give a threaded interface and a
+    # manual interface.
+    client.loop_forever()
 
 
     # close monetdb connection

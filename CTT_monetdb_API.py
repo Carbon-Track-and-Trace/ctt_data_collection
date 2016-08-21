@@ -33,6 +33,12 @@ except ImportError:
     import pymonetdb
 
 DEBUG = False
+myLogLevel = {'debug': logging.DEBUG,
+              'info': logging.INFO,
+              'warning': logging.WARNING,
+              'error': logging.ERROR,
+              'critical': logging.CRITICAL}
+logging.basicConfig(level=myLogLevel['debug'])
 
 MAPIPORT = int(os.environ.get('MAPIPORT', 50000))
 CTTDB = os.environ.get('CTT_DB', 'ctt')
@@ -60,9 +66,9 @@ def open_connection(database=CTTDB, port=MAPIPORT, hostname=TSTHOSTNAME,
             raise serr
             # connection refused
             # handle here
-        msg  = "You maybe forgot to start monetdb, try this command:"
-        msg += "\tmonetdbd start <fullpath/to/monetdb/databases>"
-        msg += "like this example:\n\tmonetdbd start /home/patechoc/monetdb"
+        msg  = "You maybe forgot to start monetdb, try this command:\n"
+        msg += "\tmonetdbd start <fullpath/to/monetdb/databases>\n"
+        msg += "like this example:\n\tmonetdbd start /home/patechoc/monetdb\n"
         logging.critical(msg)
         sys.exit()
     return db
@@ -75,15 +81,21 @@ def backup_DB(backup_path):
     # msqldump --database=ctt --user=co2 --describe > /tmp/2016-07-19_backupMyDB.sql
     msg = "Dump Schema: enter password for accessing CTT database with user 'co2'"
     logging.info(msg)
-    filepath = backup_path + "/" + str(today) + "_backupSchemaDB.sql"
+    filepath = "{path}/{day}\_backupSchemaDB.sql".format(path=backup_path,
+                                                         day=today.strftime("%Y-%m-%d"))
+    print filepath
     command = "msqldump --database=ctt --user=co2 --describe > "+ filepath
+    print command
     os.system(command)
 
     # mclient -u co2 -d ctt --dump > /tmp/2016-07-19_dump.sql
     msg = "Dump database: enter password for accessing CTT database with user 'co2'"
     logging.info(msg)
-    filepath = backup_path + "/" + str(today) + "_backupDataDB.sql"
+    filepath = "{path}/{day}\_backupDataDB.sql".format(path=backup_path,
+                                                       day=today.strftime("%Y-%m-%d"))
+    print filepath
     command = "mclient -u co2 -d ctt --dump > " + filepath
+    print command
     os.system(command)
 
     
@@ -476,9 +488,9 @@ def add_constraint(db, tableName, nameConstraint, typeTableConstraint,
             db.commit()
     else:
         if DEBUG:
-        msg = "constraint '{const}' already exists in table '{table}'".format(const=nameConstraint,
-                                                                              table=tableName)
-        logging.info(msg)
+            msg = "constraint '{const}' already exists in table '{table}'".format(const=nameConstraint,
+                                                                                  table=tableName)
+            logging.info(msg)
 
 def add_location(db, placename, description=None,
                  latitude=None, longitude=None, altitude=None,

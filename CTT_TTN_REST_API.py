@@ -8,6 +8,7 @@
 """
 
 import os, sys, re
+import logging
 import getopt, errno  
 import getpass    
 import requests
@@ -47,14 +48,18 @@ def get_all_messages(node):
     if limit > 250:
         limit = 250
     res = get_messages(node, offset, limit)
+
+    # get all MQTT msg into the array 'messages'
     while len(res) > 0:
         messages.extend(res)
         offset += limit
         res = get_messages(node, offset, limit)
 
+    # from the array 'messages', extract the payload of each MQTT message (dict)
     for msg in messages:
         msg['data_decoded'] = CTT_Nodes.decode_msg_payload(str(msg['data']))
         messages_json.append(msg)
+    print "{nb} messages collected for node '{nd}'".format(nd=node, nb=len(messages_json))
     return messages_json
 
 
