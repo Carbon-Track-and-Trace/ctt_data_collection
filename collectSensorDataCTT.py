@@ -74,6 +74,7 @@ def run():
     init_data(db_ctt)
     
     # collect and store historical data for node '02032201' directly from file
+    # wget http://129.241.209.185:1880/api/02032201 ../Data_archives/02032201.json
     archives = ['../Data_archives/02032201.json',
                 '/home/patechoc/Documents/CODE-DEV/AIA/Project_Carbon-Track-and-Trace/CTT_dashboard/Data_archives/02032201.json']
     for archive in archives:
