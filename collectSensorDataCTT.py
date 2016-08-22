@@ -63,8 +63,7 @@ def run():
     db_ctt = mdb.open_connection()
     
     ## backup DB if exists
-    #mdb.backup_DB(backup_path="/tmp/")
-    #sys.exit()
+    mdb.backup_DB(backup_path="/tmp/")
 
     ## create tables if missing
     #mdb.drop_CTT_tables(db_ctt)
@@ -73,29 +72,29 @@ def run():
     db_ctt.commit()
     init_data(db_ctt)
     
-    # collect and store historical data for node '02032201' directly from file
-    # wget http://129.241.209.185:1880/api/02032201 ../Data_archives/02032201.json
-    archives = ['../Data_archives/02032201.json',
-                '/home/patechoc/Documents/CODE-DEV/AIA/Project_Carbon-Track-and-Trace/CTT_dashboard/Data_archives/02032201.json']
-    for archive in archives:
-        try:
-            with open(archive) as json_data:
-                oldMsg = json.load(json_data)
-                tt = len(oldMsg)
-                for m, msgMQTT in enumerate(oldMsg):
-                    print "msg #{m}/{t}".format(m=m, t=tt)
-                    base64EncodedPayload = CTT_Nodes.decode_msg_payload(msgMQTT['data'])
-                    payload = CTT_Nodes.extract_payload(base64EncodedPayload)
-                    msgMQTT.update(payload)
-                    msgDict = mqtt.map_msg_MQTT_to_monetdb(msgMQTT)
-                    if DEBUG:
-                        pprint.pprint(msgDict)
-                    if db_ctt != None:
-                        mdb.add_node_message(db=db_ctt, msg=msgDict)
-                        db_ctt.commit()        
-                json_data.close()
-        except IOError:
-            pass
+    # # collect and store historical data for node '02032201' directly from file
+    # # wget http://129.241.209.185:1880/api/02032201 ../Data_archives/02032201.json
+    # archives = ['../Data_archives/02032201.json',
+    #             '/home/patechoc/Documents/CODE-DEV/AIA/Project_Carbon-Track-and-Trace/CTT_dashboard/Data_archives/02032201.json']
+    # for archive in archives:
+    #     try:
+    #         with open(archive) as json_data:
+    #             oldMsg = json.load(json_data)
+    #             tt = len(oldMsg)
+    #             for m, msgMQTT in enumerate(oldMsg):
+    #                 print "msg #{m}/{t}".format(m=m, t=tt)
+    #                 base64EncodedPayload = CTT_Nodes.decode_msg_payload(msgMQTT['data'])
+    #                 payload = CTT_Nodes.extract_payload(base64EncodedPayload)
+    #                 msgMQTT.update(payload)
+    #                 msgDict = mqtt.map_msg_MQTT_to_monetdb(msgMQTT)
+    #                 if DEBUG:
+    #                     pprint.pprint(msgDict)
+    #                 if db_ctt != None:
+    #                     mdb.add_node_message(db=db_ctt, msg=msgDict)
+    #                     db_ctt.commit()        
+    #             json_data.close()
+    #     except IOError:
+    #         pass
 
     # collect and store historical data from TTN REST API
     messages = []

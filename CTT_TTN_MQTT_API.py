@@ -128,7 +128,7 @@ def on_message_packets(client, userdata, msg):
     
 
 
-def ctt_collect_MQTT_msg():
+def test_ctt_collect_MQTT_msg():
     node_IDs = ["02032220",
                 "02032221",
                 "02032222",
@@ -165,7 +165,7 @@ def ctt_collect_MQTT_msg():
 
 
 def main():
-    ctt_collect_MQTT_msg()
+    test_ctt_collect_MQTT_msg()
 
 
 
