@@ -53,9 +53,21 @@ def init_data(db_ctt):
     # nodeChange={'location_id':5, 'node_eui':"02032201", 'datarate':"SF4334"}
     # update_entry(db=db_ctt, tableName="nodes", entryDict=nodeChange,
     #              whereKey="node_eui", commit=True)
-    
 
-
+    # CTT topics per "application" i.e. cities in this case (Vejle, Trondheim, ...)
+    applications = []
+    applications.append({'applicationName':'CTT_Vejle',
+                         'brokerHost':'staging.thethingsnetwork.org',
+                         'AppEUI':'70B3D57ED00006CE',
+                         'AccessKey':'DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260='})
+    # applications.append({'applicationName':'CTT_Trondheim',
+    #                      'brokerHost':'staging.thethingsnetwork.org',
+    #                      'AppEUI':'70B3D57ED0000785',
+    #                      'AccessKey':'xU/EcEgbwysdjQdQPpzzfwuip9IyJQPBFiqenTksJ88='})
+    # applications.append({'applicationName':'CTT_Trondheim_Deployment',
+    #                      'brokerHost':'staging.thethingsnetwork.org',
+    #                      'AppEUI':'70B3D57ED0000AD8',
+    #                      'AccessKey':'LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg='})
 
 def run():
     # Prepare the database
@@ -63,7 +75,7 @@ def run():
     db_ctt = mdb.open_connection()
     
     ## backup DB if exists
-    mdb.backup_DB(backup_path="/tmp/")
+    #mdb.backup_DB(backup_path="/tmp/")
 
     ## create tables if missing
     #mdb.drop_CTT_tables(db_ctt)
@@ -96,18 +108,18 @@ def run():
     #     except IOError:
     #         pass
 
-    # collect and store historical data from TTN REST API
-    messages = []
-    for node in node_IDs:
-        msg = rest.get_all_messages(node)
-        messages.extend(msg)
-    for msg in messages:
-        msgDict = msg
-        payload = CTT_Nodes.extract_payload(msg['data_decoded'])
-        msgDict.update(payload)
-        #pprint.pprint(msgDict)
-        mdb.add_node_message(db=db_ctt, msg=msgDict)
-        db_ctt.commit()        
+    # # collect and store historical data from TTN REST API
+    # messages = []
+    # for node in node_IDs:
+    #     msg = rest.get_all_messages(node)
+    #     messages.extend(msg)
+    # for msg in messages:
+    #     msgDict = msg
+    #     payload = CTT_Nodes.extract_payload(msg['data_decoded'])
+    #     msgDict.update(payload)
+    #     #pprint.pprint(msgDict)
+    #     mdb.add_node_message(db=db_ctt, msg=msgDict)
+    #     db_ctt.commit()        
 
     # collect and store indefinitely real-time data from TTN MQTT Broker
     # include log/notifications when important changes occur

@@ -138,11 +138,11 @@ def test_ctt_collect_MQTT_msg():
     
     ### Create a client instance
     ### (parameters descp. here: http://anaconda.org/pypi/paho-mqtt#installation)
-    clientMQTT = paho.Client(client_id="Patechoc",
+    clientMQTT = paho.Client(client_id="NTNU",
                              clean_session=False,
                              userdata=None,
                              protocol=paho.MQTTv311)
-    username = "patrick.merlot@gmail.com"
+    username = "pm@numascale.com"
     password = None
     clientMQTT.username_pw_set(username, password)
 
