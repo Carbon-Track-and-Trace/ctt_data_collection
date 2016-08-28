@@ -55,19 +55,29 @@ def init_data(db_ctt):
     #              whereKey="node_eui", commit=True)
 
     # CTT topics per "application" i.e. cities in this case (Vejle, Trondheim, ...)
+    global applications
+    global application
     applications = []
+    application = {'applicationName':'CTT_Vejle',
+                   'brokerHost':'staging.thethingsnetwork.org',
+                   'brokerPort':1883,
+                   'appEUI':'70B3D57ED00006CE',
+                   'accessKey':'DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260='}
     applications.append({'applicationName':'CTT_Vejle',
                          'brokerHost':'staging.thethingsnetwork.org',
-                         'AppEUI':'70B3D57ED00006CE',
-                         'AccessKey':'DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260='})
-    # applications.append({'applicationName':'CTT_Trondheim',
-    #                      'brokerHost':'staging.thethingsnetwork.org',
-    #                      'AppEUI':'70B3D57ED0000785',
-    #                      'AccessKey':'xU/EcEgbwysdjQdQPpzzfwuip9IyJQPBFiqenTksJ88='})
-    # applications.append({'applicationName':'CTT_Trondheim_Deployment',
-    #                      'brokerHost':'staging.thethingsnetwork.org',
-    #                      'AppEUI':'70B3D57ED0000AD8',
-    #                      'AccessKey':'LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg='})
+                         'brokerPort':1883,
+                         'appEUI':'70B3D57ED00006CE',
+                         'accessKey':'DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260='})
+    applications.append({'applicationName':'CTT_Trondheim',
+                         'brokerHost':'staging.thethingsnetwork.org',
+                         'brokerPort':1883,
+                         'appEUI':'70B3D57ED0000785',
+                         'accessKey':'xU/EcEgbwysdjQdQPpzzfwuip9IyJQPBFiqenTksJ88='})
+    applications.append({'applicationName':'CTT_Trondheim_Deployment',
+                         'brokerHost':'staging.thethingsnetwork.org',
+                         'brokerPort':1883,
+                         'appEUI':'70B3D57ED0000AD8',
+                         'accessKey':'LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg='})
 
 def run():
     # Prepare the database
@@ -75,7 +85,7 @@ def run():
     db_ctt = mdb.open_connection()
     
     ## backup DB if exists
-    #mdb.backup_DB(backup_path="/tmp/")
+    mdb.backup_DB(backup_path="/tmp/")
 
     ## create tables if missing
     #mdb.drop_CTT_tables(db_ctt)
@@ -83,7 +93,7 @@ def run():
     mdb.create_CTT_tables(db_ctt)
     db_ctt.commit()
     init_data(db_ctt)
-    
+
     # # collect and store historical data for node '02032201' directly from file
     # # wget http://129.241.209.185:1880/api/02032201 ../Data_archives/02032201.json
     # archives = ['../Data_archives/02032201.json',
@@ -125,6 +135,7 @@ def run():
     # include log/notifications when important changes occur
     #  (new device location, new/lost sensor, new gateway for comm., ... )
     topics = ["nodes/"+nID+"/packets" for nID in node_IDs]
+    topics = ["70B3D57ED00006CE/devices/+/up"]
     mqtt.set_topics(topics)
     mqtt.set_db(db_ctt)
     mqtt.ctt_collect_MQTT_msg()

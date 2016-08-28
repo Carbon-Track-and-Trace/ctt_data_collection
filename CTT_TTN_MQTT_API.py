@@ -63,9 +63,9 @@ def map_msg_MQTT_to_monetdb(msgMQTT):
     to the fieldname of the monetdb tables
     """
     mapping_MQTT_to_DB = {u'gatewayEui': "gateway_eui",
-                          u'nodeEui': "node_eui",
-                          u'dataRate': "datarate",
-                          u'data': "data_base64",}
+                              u'nodeEui': "node_eui",
+                              u'dataRate': "datarate",
+                              u'data': "data_base64",}
     msgDict = msgMQTT
     for oldKey in mapping_MQTT_to_DB.keys():
         newKey = mapping_MQTT_to_DB[oldKey]
@@ -105,20 +105,54 @@ def map_msg_MQTT_to_monetdb(msgMQTT):
     #  u'time': u'2016-08-02T12:43:36.981237138Z',
     #  'waspmote_id': 'CTT_Module1'}
 
- 
+    # new MQTT dictionary:
+    # {'SENSOR_BAT': 78,
+    #  'SENSOR_GP_CO2': -99.0,
+    #  'SENSOR_GP_HUM': 100.0,
+    #  'SENSOR_GP_NO2': 0.0,
+    #  'SENSOR_GP_PRES': 100954.546875,
+    #  'SENSOR_GP_TC': 19.440000534057617,
+    #  'SENSOR_OPC_PM1': 104.28593444824219,
+    #  'SENSOR_OPC_PM10': 160.12428283691406,
+    #  'SENSOR_OPC_PM2_5': 143.34170532226562,
+    #  u'altitude': 10,
+    #  u'channel': 3,
+    #  u'codingrate': u'4/5',
+    #  u'counter': 8390,
+    #  u'crc': 1,
+    #  u'datarate': u'SF7BW125',
+    #  u'dev_eui
+    #  u'frequency': 867.1,
+    #  u'gateway_eui': u'0000024B080E06B3',
+    #  u'gateway_time': u'2016-08-28T21:21:24.707556Z',
+    #  u'gateway_timestamp': 3165322931,
+    #  u'latitude': 55.70799,
+    #  u'longitude': 9.53225,
+    #  u'lsnr': 6.5,
+    #  u'modulation': u'LORA',
+    #  u'payload': u'PD0+ADdk4lcYVkpDVFQwMSPDjwAAxsKJAAAAAJAfhZtBkgAAyEKTRi3FR5dmktBCmHpXD0OZ0R8gQzRO',
+    #  u'port': 3,
+    #  u'rfchain': 0,
+    #  u'rssi': -106,
+    #  u'server_time': u'2016-08-28T21:21:24.72138545Z'}
+    
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     print("Rx msg: '")
-    pprint(str(msg.payload))
-    pprint(msg.payload)
     msgMQTT = json.loads(msg.payload)
-    base64EncodedPayload = CTT_Nodes.decode_msg_payload(msgMQTT['data'])
-    payload = CTT_Nodes.extract_payload(base64EncodedPayload)
+    #base64EncodedPayload = CTT_Nodes.decode_msg_payload(msgMQTT['payload'])
+    base64EncodedPayload = msgMQTT['payload']
+    meta = msgMQTT.pop('metadata')
+    payload  = CTT_Nodes.extract_payload(base64EncodedPayload)
+    metadata = CTT_Nodes.extract_info_metadata(meta[0])
+    msgMQTT['node_eui'] = msgMQTT['dev_eui']
     msgMQTT.update(payload)
-    msgDict = map_msg_MQTT_to_monetdb(msgMQTT)
+    msgMQTT.update(metadata)
+    del msgMQTT["gateway_timestamp"]
+    ### msgDict = map_msg_MQTT_to_monetdb(msgMQTT)
     if db != None:
-        mdb.add_node_message(db=db, msg=msgDict)
+        mdb.add_node_message(db=db, msg=msgMQTT)
         db.commit()        
 
 # Per topic message callbacks
@@ -127,13 +161,19 @@ def on_message_packets(client, userdata, msg):
     on_message(client, userdata, msg)
     
 
-
-def test_ctt_collect_MQTT_msg():
-    node_IDs = ["02032220",
-                "02032221",
-                "02032222",
-                "02032201"]
-    tpcs = ["nodes/"+nID+"/packets" for nID in node_IDs]
+def ctt_collect_MQTT_msg():
+    # node_IDs = ["02032220",
+    #             "02032221",
+    #             "02032222",
+    #             "02032201"]
+    # tpcs = ["nodes/"+nID+"/packets" for nID in node_IDs]
+    global application
+    application = {'applicationName':'CTT_Vejle',
+                   'brokerHost':'staging.thethingsnetwork.org',
+                   'brokerPort':1883,
+                   'appEUI':'70B3D57ED00006CE',
+                   'accessKey':'DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260='}
+    tpcs = ["70B3D57ED00006CE/devices/+/up"]
     set_topics(tpcs)
     
     ### Create a client instance
@@ -142,14 +182,17 @@ def test_ctt_collect_MQTT_msg():
                              clean_session=False,
                              userdata=None,
                              protocol=paho.MQTTv311)
-    username = "pm@numascale.com"
-    password = None
+    username = application['appEUI'] #"pm@numascale.com"
+    password = application['accessKey'] #None
     clientMQTT.username_pw_set(username, password)
 
     ### Connect to a broker using one of the connect*() functions
     clientMQTT.on_connect = on_connect
     clientMQTT.on_message = on_message
-    clientMQTT.connect(host="croft.thethings.girovito.nl", port=1883, keepalive=60, bind_address="")
+    #clientMQTT.connect(host="croft.thethings.girovito.nl", port=1883, keepalive=60, bind_address="")
+    clientMQTT.connect(host=application['brokerHost'],
+                       port=application['brokerPort'],
+                       keepalive=60, bind_address="")
 
     ### Call one of the loop*() functions to maintain network traffic flow with the broker
     # Blocking call that processes network traffic, dispatches callbacks and
@@ -165,9 +208,7 @@ def test_ctt_collect_MQTT_msg():
 
 
 def main():
-    test_ctt_collect_MQTT_msg()
-
-
+    ctt_collect_MQTT_msg()
 
 if __name__ == "__main__": 
     main()

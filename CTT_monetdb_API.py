@@ -594,61 +594,64 @@ def add_node(db, node_eui, placename="", datarate=None,
 
 
 def add_node_message(db, msg, commit=False):
-    node_eui = msg['node_eui']
-    timestring = msg['time']
+    timestring = msg['gateway_time']
     try:
-        timestamptz = datetime.strptime(msg['time'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        timestamptz = datetime.strptime(timestring, '%Y-%m-%dT%H:%M:%S.%fZ')
     except ValueError:
         try:
-            timestamptz = datetime.strptime(msg['time'], '%Y-%m-%dT%H:%M:%SZ')
+            timestamptz = datetime.strptime(timestring, '%Y-%m-%dT%H:%M:%SZ')
         except ValueError:
-            no_nanoseconds = msg['time'][:-4]+"Z"
+            no_nanoseconds = timestring[:-4]+"Z"
             timestamptz = datetime.strptime(no_nanoseconds, '%Y-%m-%dT%H:%M:%S.%fZ')
+
+    msg['timestamptz'] = timestamptz
+    msg['timestring'] = timestring
 
     #data_base64 = str(msg['data'])
     #data_decoded = msg['data_decoded']
-    gateway_eui = msg['gateway_eui']
-    datarate = msg['datarate']
-    frequency = msg['frequency']
-    snr = msg['snr']
-    rssi = msg['rssi']
-    serial_id    = msg['serial_id']
-    waspmote_id  = msg['waspmote_id']
-    sequence_Num = msg['sequence_Num']
-    sensors      = msg['sensors']
-    sensorKeys   = sensors.keys()
-    
-    # check if all sensors keys exist as column names in table 'node_msg'
+    # gateway_eui = msg['gateway_eui']
+    # datarate = msg['datarate']
+    # frequency = msg['frequency']
+    # lsnr = msg['lsnr']
+    # rssi = msg['rssi']
+    #serial_id    = msg['serial_id']
+    #waspmote_id  = msg['waspmote_id']
+    #sequence_Num = msg['sequence_Num']
+    #sensors      = msg['sensors']
+    #sensorKeys   = sensors.keys()
+
+
+    # check if all keys exist as column names in table 'node_msg'
     # if not create them
+    labels = msg.keys()
     descp = get_description_table(db, tableName='node_msg')
     tableFields = [t[0] for t in descp]
-    missingCols = [sk for sk in sensorKeys if sk not in tableFields]
-    colType = "INT"
+    missingCols = [sk for sk in labels if sk not in tableFields]
     for col in missingCols:
-        try:
-            value = int(sensors[col])
-        except ValueError:
-            colType = "DECIMAL"
-            try:
-                value = float(sensors[col])
-            except ValueError:
-                colType = "STRING"
-                pass
-        columndef = col + " " + colType
+        colType = type(msg[col])
+        if colType == int:
+            mdbColType = "INT"
+        elif colType == float:
+            mdbColType = "DECIMAL"
+        else:
+            mdbColType = "STRING"
+        columndef = col + " " + mdbColType
+        print "Missing column: '", col, "', of type: ", mdbColType
         add_table_column(db, tableName='node_msg', columndef=columndef, doCommit=True)
 
     # update 'node' info (datarate) for each new message
     # eventually add 'gateway' if new gateway_eui detected
     
     # add the node_message as new entry
-    node_msg = {'node_eui':node_eui, 'gateway_eui':gateway_eui,
-                'timestring':timestring, 'timestamptz':timestamptz,
-         #       'data_base64':data_base64, 'data_decoded':data_decoded, 
-                'snr':snr, 'rssi':rssi, 'datarate':datarate, 'frequency':frequency,
-                'serial_id':serial_id, 'waspmote_id':waspmote_id, 'sequence_Num':sequence_Num}
-    node_msg.update(sensors)
-    fieldsNotNone = [f for f in node_msg.keys() if node_msg[f] != None]
-    node_messages = [dict((k.lower(), node_msg[k]) for k in fieldsNotNone)]
+    # node_msg = {'node_eui':node_eui, 'gateway_eui':gateway_eui,
+    #             'timestring':timestring, 'timestamptz':timestamptz,
+    #      #       'data_base64':data_base64, 'data_decoded':data_decoded, 
+    #             'snr':snr, 'rssi':rssi, 'datarate':datarate, 'frequency':frequency,
+    #             'serial_id':serial_id, 'waspmote_id':waspmote_id, 'sequence_Num':sequence_Num}
+    #node_msg.update(sensors)
+    #fieldsNotNone = [f for f in node_msg.keys() if node_msg[f] != None]
+    fieldsNotNone = [f for f in msg.keys() if msg[f] != None]
+    node_messages = [dict((k.lower(), msg[k]) for k in fieldsNotNone)]
     if DEBUG:
         msg = "add node message: "
         logging.info(msg)
