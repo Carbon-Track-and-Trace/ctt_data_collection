@@ -81,8 +81,8 @@ def backup_DB(backup_path):
     # msqldump --database=ctt --user=co2 --describe > /tmp/2016-07-19_backupMyDB.sql
     msg = "Dump Schema: enter password for accessing CTT database with user 'co2'"
     logging.info(msg)
-    filepath = "{path}/{day}\_backupSchemaDB.sql".format(path=backup_path,
-                                                         day=today.strftime("%Y-%m-%d"))
+    str_time = today.strftime("%Y-%m-%d_%H:%M:%S")
+    filepath = "{path}/{day}\_backupSchemaDB.sql".format(path=backup_path, day=str_time)
     print filepath
     command = "msqldump --database=ctt --user=co2 --describe > "+ filepath
     print command
@@ -91,8 +91,7 @@ def backup_DB(backup_path):
     # mclient -u co2 -d ctt --dump > /tmp/2016-07-19_dump.sql
     msg = "Dump database: enter password for accessing CTT database with user 'co2'"
     logging.info(msg)
-    filepath = "{path}/{day}\_backupDataDB.sql".format(path=backup_path,
-                                                       day=today.strftime("%Y-%m-%d"))
+    filepath = "{path}/{day}\_backupDataDB.sql".format(path=backup_path, day=str_time)
     print filepath
     command = "mclient -u co2 -d ctt --dump > " + filepath
     print command
