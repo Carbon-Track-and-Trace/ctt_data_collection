@@ -594,7 +594,10 @@ def add_node(db, node_eui, placename="", datarate=None,
 
 
 def add_node_message(db, msg, commit=False):
-    timestring = msg['gateway_time']
+    try:
+        timestring = msg['gateway_time']
+    except:
+        return
     try:
         timestamptz = datetime.strptime(timestring, '%Y-%m-%dT%H:%M:%S.%fZ')
     except ValueError:
