@@ -8,6 +8,7 @@
 """
 
 import os, sys, re
+from sys import stdin, stderr
 import json
 from pprint import pprint
 from datetime import datetime
@@ -47,6 +48,27 @@ def extract_payload(base64_payload_MQTT):
     Battery BAT  = "SENSOR_BAT"
     it returns the data as dictionary
     """
+    inHEX = decode_base64_to_base16(base64_payload_MQTT)
+    (dataDict, measurements) = extract_payload_fromHEX(inHEX)
+    return dataDict
+
+def extract_payload_fromHEX(inHEX_payload_MQTT):
+    """ From a device's payload in HEXADECIMAL (base16) like this one:
+    PD0+ADdk4lcYVkpDVFQwMSNgj0hmtUOJAAAAAJD2KJpBkoDlkUKTsATGR5fJMoU/mKRU8j+Z4BE5QDRa
+    
+    this function converts it in HEX, then parse it according
+    to this arbitrary order:
+    CO2 = "SENSOR_GP_CO2",
+    NO2 = "SENSOR_GP_NO2",
+    Temperature = "SENSOR_GP_TC",
+    Humidity = "SENSOR_GP_HUM",
+    Pressure = "SENSOR_GP_PRES".
+    (optional) PM1 = "SENSOR_OPC_PM1",
+    (optional) PM2.5 = "SENSOR_OPC_PM2_5",
+    (optional) PM10 = "SENSOR_OPC_PM10",
+    Battery BAT  = "SENSOR_BAT"
+    it returns the data as dictionary
+    """
     labelGasSensors = ["SENSOR_GP_CO2",
                        "SENSOR_GP_NO2",
                        "SENSOR_GP_TC",
@@ -56,8 +78,8 @@ def extract_payload(base64_payload_MQTT):
                           "SENSOR_OPC_PM2_5",
                           "SENSOR_OPC_PM10"]
     labelBatteryLevel = ["SENSOR_BAT"]
-    inHEX = decode_base64_to_base16(base64_payload_MQTT)
-    temp = inHEX[36:]
+
+    temp = inHEX_payload_MQTT[36:]
     measurements = []
     labelSensors = []
     measurements.append(temp[2:10])  # CO2
@@ -89,7 +111,7 @@ def extract_payload(base64_payload_MQTT):
             measurements[x] = struct.unpack('!f', measurements[x].decode('hex'))[0]
         measurements[5] = battery_conversion("".join(measurements[5]))
     dataDict = dict(zip(labelSensors, measurements))
-    return dataDict
+    return (dataDict, measurements)
 
 def extract_info_metadata(metadataDict):
     """ From a device's metadata like this one:
@@ -164,5 +186,12 @@ def test_data_extraction(BASE64_str):
 
 
 if __name__ == "__main__": 
-    BASE64_str = "PD0+ADdk4lcYVkpDVFQwMSNgj0hmtUOJAAAAAJD2KJpBkoDlkUKTsATGR5fJMoU/mKRU8j+Z4BE5QDRa"
-    test_data_extraction(BASE64_str)
+    #BASE64_str = "PD0+ADdk4lcYVkpDVFQwMSNgj0hmtUOJAAAAAJD2KJpBkoDlkUKTsATGR5fJMoU/mKRU8j+Z4BE5QDRa"
+    #test_data_extraction(BASE64_str)
+
+    for inHEX in stdin:
+        (dataDict, measurements) = extract_payload_fromHEX(inHEX)
+        with open('vejle_data_Numascale.txt', 'a') as data:
+            data.writelines('%s ' % item for item in measurements)
+            data.write('\n')
+            data.close()

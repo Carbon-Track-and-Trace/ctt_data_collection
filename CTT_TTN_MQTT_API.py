@@ -161,7 +161,7 @@ def on_message_packets(client, userdata, msg):
     on_message(client, userdata, msg)
     
 
-def ctt_collect_MQTT_msg():
+def ctt_collect_MQTT_msg(nameClientID="NTNU"):
     # node_IDs = ["02032220",
     #             "02032221",
     #             "02032222",
@@ -178,7 +178,7 @@ def ctt_collect_MQTT_msg():
     
     ### Create a client instance
     ### (parameters descp. here: http://anaconda.org/pypi/paho-mqtt#installation)
-    clientMQTT = paho.Client(client_id="NTNU",
+    clientMQTT = paho.Client(client_id=nameClientID,
                              clean_session=False,
                              userdata=None,
                              protocol=paho.MQTTv311)
@@ -205,10 +205,11 @@ def ctt_collect_MQTT_msg():
     ### Use publish() to publish messages to the broker
     ### Use disconnect() to disconnect from the broker
 
-
+def test_ctt_collect_MQTT_msg():
+    ctt_collect_MQTT_msg(nameClientID="AIA")
 
 def main():
-    ctt_collect_MQTT_msg()
+    test_ctt_collect_MQTT_msg()
 
 if __name__ == "__main__": 
     main()
