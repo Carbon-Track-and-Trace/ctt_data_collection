@@ -38,7 +38,7 @@ myLogLevel = {'debug': logging.DEBUG,
               'warning': logging.WARNING,
               'error': logging.ERROR,
               'critical': logging.CRITICAL}
-logging.basicConfig(level=myLogLevel['debug'])
+logging.basicConfig(level=myLogLevel['info'])
 
 MAPIPORT = int(os.environ.get('MAPIPORT', 50000))
 CTTDB = os.environ.get('CTT_DB', 'ctt')
@@ -167,7 +167,7 @@ def add_table_column(db, tableName, columndef, doCommit = True):
     # alter table a add column b2 double;
     query = 'ALTER TABLE {tab} ADD COLUMN {cDef}'.format(tab=tableName, cDef=columndef)
     try:
-        if DEBUG:
+        if DEBUG: # toto
             logging.info(query)
         cursor.execute(query)
     except pymonetdb.exceptions.OperationalError:
@@ -593,9 +593,19 @@ def add_node(db, node_eui, placename="", datarate=None,
 
 
 def add_node_message(db, msg, commit=False):
+    print "add_node_message in MonetDB"
+    print "msg:", msg
     try:
-        timestring = msg['gateway_time']
+        #timestp = msg['gateway_timestamp']
+        #msg['gateway_timestamp'] = int(msg['gateway_timestamp'])
+        #timestring = datetime.fromtimestamp(int(timestp)).strftime('%Y-%m-%d %H:%M:%S.%fZ')
+        #timestring = msg['gateway_time']
+        timestring = msg["server_time"]
+        print timestring
     except:
+        #print "no 'gateway_time' nor 'gateway_timestamp' in the MQTT message"
+        print "no 'server_time' in the MQTT message"
+        print "Can't store the entry in MonetDB."
         return
     try:
         timestamptz = datetime.strptime(timestring, '%Y-%m-%dT%H:%M:%S.%fZ')
@@ -660,6 +670,7 @@ def add_node_message(db, msg, commit=False):
         pprint.pprint(node_messages[0])
     try:
         add_entries(db, tableName="co2.node_msg", listDict=node_messages, commit=True)
+        print "New message stored :)"
     except pymonetdb.exceptions.IntegrityError:
         if DEBUG:
             msg = "The node '{n}' already exists".format(n=node_eui)

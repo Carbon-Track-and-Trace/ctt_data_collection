@@ -29,6 +29,7 @@ def set_db(db_connection):
     and make it a global variable
     """
     global db
+    print "Set the connection to the database a global variable"
     db = db_connection
 
 def on_connect(client, userdata, flags, rc):
@@ -139,8 +140,10 @@ def map_msg_MQTT_to_monetdb(msgMQTT):
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-    print("Rx msg: '")
+    print("Rx msg: ")
+    print msg.payload
     msgMQTT = json.loads(msg.payload)
+
     #base64EncodedPayload = CTT_Nodes.decode_msg_payload(msgMQTT['payload'])
     base64EncodedPayload = msgMQTT['payload']
     meta = msgMQTT.pop('metadata')
@@ -151,9 +154,14 @@ def on_message(client, userdata, msg):
     msgMQTT.update(metadata)
     del msgMQTT["gateway_timestamp"]
     ### msgDict = map_msg_MQTT_to_monetdb(msgMQTT)
+    print "MQTT message for human"
+    print msgMQTT.update
+    print "DB status (if None: restart MonetDB on server): ", db
     if db != None:
         mdb.add_node_message(db=db, msg=msgMQTT)
         db.commit()        
+    else:
+        print "DB status is None: restart MonetDB on server)"
 
 # Per topic message callbacks
 def on_message_packets(client, userdata, msg):
