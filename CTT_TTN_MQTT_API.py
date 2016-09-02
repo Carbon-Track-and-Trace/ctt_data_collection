@@ -140,7 +140,7 @@ def map_msg_MQTT_to_monetdb(msgMQTT):
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-    print("Rx msg: ")
+    print("\nRx msg: ")
     print msg.payload
     msgMQTT = json.loads(msg.payload)
 
@@ -155,7 +155,7 @@ def on_message(client, userdata, msg):
     del msgMQTT["gateway_timestamp"]
     ### msgDict = map_msg_MQTT_to_monetdb(msgMQTT)
     print "MQTT message for human"
-    print msgMQTT.update
+    print msgMQTT
     print "DB status (if None: restart MonetDB on server): ", db
     if db != None:
         mdb.add_node_message(db=db, msg=msgMQTT)

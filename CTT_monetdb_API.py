@@ -638,7 +638,7 @@ def add_node_message(db, msg, commit=False):
     labels = msg.keys()
     descp = get_description_table(db, tableName='node_msg')
     tableFields = [t[0] for t in descp]
-    missingCols = [sk for sk in labels if sk not in tableFields]
+    missingCols = [sk for sk in labels if sk.lower().strip(' ') not in tableFields]
     for col in missingCols:
         colType = type(msg[col])
         if colType == int:
