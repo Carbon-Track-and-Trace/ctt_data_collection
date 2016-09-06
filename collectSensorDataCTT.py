@@ -49,9 +49,9 @@ def init_data(db_ctt):
     #            "02032222"]
     #for id in node_IDs:
     #    mdb.add_node(db=db_ctt, node_eui=id, placename='node_'+id)
-    nodes = [{'placename': u"Kirkegade/Daemningen", 'city':"Vejle", 'node_label':"VJCTT01", 'devAddress':"0E77EE00", 'latitude':55.707520, 'longitude':9.535856, 'country':"Norway"},
-             {'placename': u"Kiretorvet", 'city':"Vejle", 'node_label':"VJCTT02", 'devAddress':"8DEC044C", 'latitude':55.707763, 'longitude':9.532931, 'country':"Norway"},
-             {'placename': u"Vejle Bibliotek", 'city':"Vejle", 'node_label':"VJCTT03", 'devAddress':"C8809DA3", 'latitude':55.705401, 'longitude':9.521222, 'country':"Norway"},
+    nodes = [{'placename': u"Kirkegade/Daemningen", 'city':"Vejle", 'node_label':"VJCTT01", 'devAddress':"0E77EE00", 'latitude':55.707520, 'longitude':9.535856, 'country':"Denmark"},
+             {'placename': u"Kiretorvet", 'city':"Vejle", 'node_label':"VJCTT02", 'devAddress':"8DEC044C", 'latitude':55.707763, 'longitude':9.532931, 'country':"Denmark"},
+             {'placename': u"Vejle Bibliotek", 'city':"Vejle", 'node_label':"VJCTT03", 'devAddress':"C8809DA3", 'latitude':55.705401, 'longitude':9.521222, 'country':"Denmark"},
              {'placename': u"Solsiden Tunnel Apning", 'city':"Trondheim", 'node_label':"TKCTT01", 'devAddress':"AD6AA33E", 'latitude':63.437391, 'longitude':10.415057, 'country':"Norway"},
              {'placename': u"NSB Sentralstasjon", 'city':"Trondheim", 'node_label':"TKCTT02", 'devAddress':"48524DD8", 'latitude':63.435868, 'longitude':10.400028, 'country':"Norway"},
              {'placename': u"Prinsens gate/Kongens gate", 'city':"Trondheim", 'node_label':"TKCTT03", 'devAddress':"E935A419", 'latitude':63.430656, 'longitude':10.392226, 'country':"Norway"},
