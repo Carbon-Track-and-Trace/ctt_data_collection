@@ -31,7 +31,7 @@ import CTT_TTN_MQTT_API as mqtt
 
 DEBUG = False
 
-node_IDs = None
+#node_IDs = None
 
 def init_data(db_ctt):
     # CTT GATEWAYS
@@ -42,13 +42,36 @@ def init_data(db_ctt):
                 country='Norway')
 
     # CTT NODES
-    global node_IDs
-    node_IDs = ["02032201",
-                "02032220",
-                "02032221",
-                "02032222"]
-    for id in node_IDs:
-        mdb.add_node(db=db_ctt, node_eui=id, placename='node_'+id)
+    #global node_IDs
+    #node_IDs = ["02032201",
+    #            "02032220",
+    #            "02032221",
+    #            "02032222"]
+    #for id in node_IDs:
+    #    mdb.add_node(db=db_ctt, node_eui=id, placename='node_'+id)
+    nodes = [{'placename': u"Kirkegade/Daemningen", 'city':"Vejle", 'node_label':"VJCTT01", 'devAddress':"0E77EE00", 'latitude':55.707520, 'longitude':9.535856, 'country':"Norway"},
+             {'placename': u"Kiretorvet", 'city':"Vejle", 'node_label':"VJCTT02", 'devAddress':"8DEC044C", 'latitude':55.707763, 'longitude':9.532931, 'country':"Norway"},
+             {'placename': u"Vejle Bibliotek", 'city':"Vejle", 'node_label':"VJCTT03", 'devAddress':"C8809DA3", 'latitude':55.705401, 'longitude':9.521222, 'country':"Norway"},
+             {'placename': u"Solsiden Tunnel Apning", 'city':"Trondheim", 'node_label':"TKCTT01", 'devAddress':"AD6AA33E", 'latitude':63.437391, 'longitude':10.415057, 'country':"Norway"},
+             {'placename': u"NSB Sentralstasjon", 'city':"Trondheim", 'node_label':"TKCTT02", 'devAddress':"48524DD8", 'latitude':63.435868, 'longitude':10.400028, 'country':"Norway"},
+             {'placename': u"Prinsens gate/Kongens gate", 'city':"Trondheim", 'node_label':"TKCTT03", 'devAddress':"E935A419", 'latitude':63.430656, 'longitude':10.392226, 'country':"Norway"},
+             {'placename': u"Torvet", 'city':"Trondheim", 'node_label':"TKCTT04", 'devAddress':"7CA37D4E", 'latitude':63.430605, 'longitude':10.396176, 'country':"Norway"},
+             #placename: u"Marinen", city:"Trondheim", node_label:"TKCTT05	?	?, country:"Norway"	?},
+             #{placename: u"St. Olav Hospital", city:"Trondheim", node_label:"TKCTT06", devAddress:"??", latitude:"63.420500", longitude:"10.387693", country:"Norway"},
+             #{placename: u"Elgeseter Gate", city:"Trondheim", node_label:"TKCTT07", devAddress:"2032201", latitude:"63.419287", longitude:"10.396078", country:"Norway"},
+             {'placename': u"Hestehagen", 'city':"Trondheim", 'node_label':"TKCTT08", 'devAddress':"9981CAA5", 'latitude':63.415525, 'longitude':10.400920, 'country':"Norway"},
+             {'placename': u"Byporten", 'city':"Trondheim", 'node_label':"TKCTT09", 'devAddress':"CD3BE279", 'latitude':63.412797, 'longitude':10.399209, 'country':"Norway"},
+             #{placename: u"Solsiden Innherredsvei", city:"Trondheim", node_label:"TKCTT11", devAddress:"????", latitude:"63.433135", longitude:"10.411011", country:"Norway"},
+             ##{placename: u"Olav Trygvason/Kjøpmannsgata", city:"Trondheim", node_label:"TKCTT12", devAddress:"???", latitude:"63.432900", longitude:"10.404099", country:"Norway"},
+             {'placename': u"Omkjoringsveien", 'city':"Trondheim", 'node_label':"TKCTT10", 'devAddress':"031F5B033", 'latitude':63.403565, 'longitude':10.411040, 'country':"Norway"}]
+    
+    for nd in nodes:
+        nd_eui = nd['devAddress'].zfill(16)
+        mdb.add_node(db=db_ctt, node_eui=nd_eui, node_label=nd['node_label'], placename=nd['placename'],
+                     latitude=nd['latitude'], longitude=nd['longitude'],
+                     city=nd['city'], country=nd['country'])
+
+
 
     # nodeChange={'location_id':5, 'node_eui':"02032201", 'datarate':"SF4334"}
     # update_entry(db=db_ctt, tableName="nodes", entryDict=nodeChange,
@@ -134,7 +157,7 @@ def run():
     # collect and store indefinitely real-time data from TTN MQTT Broker
     # include log/notifications when important changes occur
     #  (new device location, new/lost sensor, new gateway for comm., ... )
-    topics = ["nodes/"+nID+"/packets" for nID in node_IDs]
+    #topics = ["nodes/"+nID+"/packets" for nID in node_IDs]
     topics = ["70B3D57ED00006CE/devices/+/up"]
     mqtt.set_topics(topics)
     mqtt.set_db(db_ctt)

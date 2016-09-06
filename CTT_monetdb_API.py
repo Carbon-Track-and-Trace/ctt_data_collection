@@ -390,6 +390,7 @@ def create_CTT_tables(db, commit=True):
               {'name':'nodes',
                'columndefs': ('id INT AUTO_INCREMENT PRIMARY KEY',
                               'node_eui VARCHAR(20) NOT NULL UNIQUE',
+                              'node_label VARCHAR(20)',
                               'location_id INT ',
                               'datarate VARCHAR(10)')},
               {'name':'sensors',
@@ -566,7 +567,7 @@ def add_gateway_message():
     pass
     
 
-def add_node(db, node_eui, placename="", datarate=None,
+def add_node(db, node_eui, node_label, placename="", datarate=None,
              latitude=None, longitude=None,
              altitude=None, address=None, zipcode=None, city=None, country=None):
     location_id = None
@@ -575,6 +576,7 @@ def add_node(db, node_eui, placename="", datarate=None,
                           latitude=latitude, longitude=longitude, altitude=altitude,
                           address=address, zipcode=zipcode, city=city, country=country)
     node={'node_eui':node_eui,
+          'node_label':node_label,
           'datarate':datarate,
           'location_id':res[0]['id']}
     fieldsNotNone = [f for f in node.keys() if node[f] != None]
@@ -781,10 +783,10 @@ def tests():
                 placename='Studentersamfundet', latitude=63.422511, longitude=10.395165,
                 country='France')
     # CTT NODES
-    add_node(db=db_ctt, node_eui='02032201', placename='node_02032201')
-    add_node(db=db_ctt, node_eui='02032220', placename='node_02032220')
-    add_node(db=db_ctt, node_eui='02032221', placename='node_02032221')
-    add_node(db=db_ctt, node_eui='02032222', placename='node_02032222')
+    add_node(db=db_ctt, node_eui='02032201', node_label='02032201', placename='node_02032201')
+    add_node(db=db_ctt, node_eui='02032220', node_label='02032220', placename='node_02032220')
+    add_node(db=db_ctt, node_eui='02032221', node_label='02032221', placename='node_02032221')
+    add_node(db=db_ctt, node_eui='02032222', node_label='02032222', placename='node_02032222')
 
     nodeChange={'location_id':5, 'node_eui':"02032201", 'datarate':"SF4334"}
     update_entry(db=db_ctt, tableName="nodes", entryDict=nodeChange,
