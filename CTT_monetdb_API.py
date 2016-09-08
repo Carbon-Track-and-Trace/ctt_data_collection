@@ -644,6 +644,7 @@ def add_node_message(db, msg, commit=False):
     missingCols = [sk for sk in labels if sk.lower().strip(' ') not in tableFields]
     for col in missingCols:
         colType = type(msg[col])
+        print col, msg[col], type(msg[col])
         if colType == int:
             mdbColType = "INT"
         elif colType == float:
