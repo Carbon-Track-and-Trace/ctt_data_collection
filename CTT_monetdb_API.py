@@ -41,6 +41,7 @@ myLogLevel = {'debug': logging.DEBUG,
 logging.basicConfig(level=myLogLevel['info'])
 
 MAPIPORT = int(os.environ.get('MAPIPORT', 50000))
+MAPIPORT_TK = int(os.environ.get('MAPIPORT_TK', 54321))
 CTTDB = os.environ.get('CTT_DB', 'ctt')
 TSTHOSTNAME = os.environ.get('CTT_HOSTNAME', 'localhost')
 TSTUSERNAME = os.environ.get('CTT_USERNAME', 'co2')
@@ -49,7 +50,7 @@ SYSUSERNAME = os.environ.get('SYS_USERNAME', 'monetdb')
 SYSPASSWORD = os.environ.get('SYS_PASSWORD', 'monetdb')
 rows = 10
 
-def open_connection(database=CTTDB, port=MAPIPORT, hostname=TSTHOSTNAME,
+def open_connection(database=CTTDB, port=MAPIPORT_TK, hostname=TSTHOSTNAME,
                     username=TSTUSERNAME, password=TSTPASSWORD,
                     autocommit=False):
     # Connect to the database
@@ -452,7 +453,7 @@ def create_CTT_tables(db, commit=True):
 
 
 def get_constraints():
-    db_sys = open_connection(database=CTTDB, port=MAPIPORT, hostname=TSTHOSTNAME,
+    db_sys = open_connection(database=CTTDB, port=MAPIPORT_TK, hostname=TSTHOSTNAME,
                              username=SYSUSERNAME, password=SYSPASSWORD,
                              autocommit=True)
     query = "select * from keys"
@@ -795,7 +796,7 @@ def tests():
     db_ctt.commit()
     close_connection(db_ctt)
     
-    db_sys = open_connection(database=CTTDB, port=MAPIPORT, hostname=TSTHOSTNAME,
+    db_sys = open_connection(database=CTTDB, port=MAPIPORT_TK, hostname=TSTHOSTNAME,
                              username=SYSUSERNAME, password=SYSPASSWORD,
                              autocommit=True)
     myRes = get_foreign_keys(db_sys)

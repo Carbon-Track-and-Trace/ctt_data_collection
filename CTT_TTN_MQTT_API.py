@@ -179,9 +179,13 @@ def ctt_collect_MQTT_msg(nameClientID="NTNU"):
     application = {'applicationName':'CTT_Vejle',
                    'brokerHost':'staging.thethingsnetwork.org',
                    'brokerPort':1883,
-                   'appEUI':'70B3D57ED00006CE',
-                   'accessKey':'DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260='}
-    tpcs = ["70B3D57ED00006CE/devices/+/up"]
+                   ### Vejle's app
+                   #appEUI':'70B3D57ED00006CE', 
+                   #'accessKey':'DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260=',
+                   ### TK's app
+                   'appEUI':'70B3D57ED0000AD8', # TK-deploy's app
+                   'accessKey':'LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg='}
+    tpcs = [application['appEUI']+"/devices/+/up"]
     set_topics(tpcs)
     
     ### Create a client instance

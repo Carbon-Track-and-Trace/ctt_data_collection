@@ -108,7 +108,7 @@ def run():
     db_ctt = mdb.open_connection()
     
     ## backup DB if exists
-    mdb.backup_DB(backup_path="/tmp/")
+    #mdb.backup_DB(backup_path="/tmp/")
 
     ## create tables if missing
     #mdb.drop_CTT_tables(db_ctt)
@@ -161,7 +161,7 @@ def run():
     topics = ["70B3D57ED00006CE/devices/+/up"]
     mqtt.set_topics(topics)
     mqtt.set_db(db_ctt)
-    mqtt.ctt_collect_MQTT_msg()
+    mqtt.ctt_collect_MQTT_msg(nameClientID="TK_deploy")
     
     # Blocking call that processes network traffic, dispatches callbacks and
     # handles reconnecting.
