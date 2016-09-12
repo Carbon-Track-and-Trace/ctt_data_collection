@@ -74,7 +74,7 @@ def open_connection(database=CTTDB, port=MAPIPORT_TK, hostname=TSTHOSTNAME,
         sys.exit()
     return db
 
-def backup_DB(backup_path):
+def backup_DB(backup_path, name=""):
     today = datetime.today()
     if not os.path.exists(backup_path):
         os.makedirs(backup_path)
@@ -83,7 +83,7 @@ def backup_DB(backup_path):
     msg = "Dump Schema: enter password for accessing CTT database with user 'co2'"
     logging.info(msg)
     str_time = today.strftime("%Y-%m-%d_%H:%M:%S")
-    filepath = "{path}/{day}\_backupSchemaDB.sql".format(path=backup_path, day=str_time)
+    filepath = "{path}/{day}\_{nm}\_backupSchemaDB.sql".format(path=backup_path,day=str_time,nm=name)
     print filepath
     command = "msqldump --database=ctt --user=co2 --describe > "+ filepath
     print command
@@ -92,7 +92,7 @@ def backup_DB(backup_path):
     # mclient -u co2 -d ctt --dump > /tmp/2016-07-19_dump.sql
     msg = "Dump database: enter password for accessing CTT database with user 'co2'"
     logging.info(msg)
-    filepath = "{path}/{day}\_backupDataDB.sql".format(path=backup_path, day=str_time)
+    filepath = "{path}/{day}\_{nm}\_backupDataDB.sql".format(path=backup_path, day=str_time,nm=name)
     print filepath
     command = "mclient -u co2 -d ctt --dump > " + filepath
     print command
