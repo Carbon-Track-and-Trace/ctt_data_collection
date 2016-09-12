@@ -64,9 +64,9 @@ def map_msg_MQTT_to_monetdb(msgMQTT):
     to the fieldname of the monetdb tables
     """
     mapping_MQTT_to_DB = {u'gatewayEui': "gateway_eui",
-                              u'nodeEui': "node_eui",
-                              u'dataRate': "datarate",
-                              u'data': "data_base64",}
+                          u'nodeEui': "node_eui",
+                          u'dataRate': "datarate",
+                          u'data': "data_base64",}
     msgDict = msgMQTT
     for oldKey in mapping_MQTT_to_DB.keys():
         newKey = mapping_MQTT_to_DB[oldKey]
