@@ -669,6 +669,14 @@ def add_node_message(db, msg, commit=False):
     fieldsNotNone = [f for f in msg.keys() if msg[f] != None and msg[f] == msg[f] ]
     # The usual way to test for a NaN is to see if it's equal to itself
     node_messages = [dict((k.lower(), msg[k]) for k in fieldsNotNone)]
+    for i, m in enumerate(node_messages):
+        keys = m.keys()
+        ## Avoid this kind of error by rounding very small values:
+        ## decimal (1.1283904314e-05) doesn't have format (18.3)
+        for key in keys:
+            val = m[key]
+            if (type(val) == float):
+                node_messages[i][key] = round(val, 3)
     if DEBUG:
         msg = "add node message: "
         logging.info(msg)
