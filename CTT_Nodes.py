@@ -8,6 +8,7 @@
 """
 
 import os, sys, re
+import argparse
 from sys import stdin, stderr
 import json
 from pprint import pprint
@@ -177,21 +178,49 @@ def decode_msg_payload(base64EncodedPayload):
 
 def test_data_extraction(BASE64_str):
     print "payload in base64:"
-    print BASE64_str
+    pprint(BASE64_str)
     HEX_str = decode_base64_to_base16(BASE64_str)
     print "payload in HEX:"
-    print HEX_str
+    pprint(HEX_str)
     payload_dict = extract_payload(BASE64_str)    
-    print payload_dict
+    print "Human-readable payload:"
+    pprint(payload_dict)
 
 
 if __name__ == "__main__": 
     #BASE64_str = "PD0+ADdk4lcYVkpDVFQwMSNgj0hmtUOJAAAAAJD2KJpBkoDlkUKTsATGR5fJMoU/mKRU8j+Z4BE5QDRa"
     #test_data_extraction(BASE64_str)
 
-    for inHEX in stdin:
-        (dataDict, measurements) = extract_payload_fromHEX(inHEX)
-        with open('vejle_data_Numascale.txt', 'a') as data:
-            data.writelines('%s ' % item for item in measurements)
-            data.write('\n')
-            data.close()
+    # for inHEX in stdin:
+    #     (dataDict, measurements) = extract_payload_fromHEX(inHEX)
+    #     with open('vejle_data_Numascale.txt', 'a') as data:
+    #         data.writelines('%s ' % item for item in measurements)
+    #         data.write('\n')
+    #         data.close()
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-hex", "--base16", type=str,
+                       help="Read and Extract payload from a message in hexadecimal.")
+    group.add_argument("-b64", "--base64", type=str,
+                       help="Read and Extract payload from a message in base64.")
+    parser.add_argument("-f", "--file_path", type=str, help="Input file to read data from to be store in DB, formatted as dictionaries on each line.")
+    parser.add_argument("-v", "--verbose", action="store_true",
+                        help="increase output verbosity")
+    args = parser.parse_args()
+    if args.base16:
+        (dataDict, measurements) = extract_payload_fromHEX(args.base16)
+        if args.verbose:
+            print "Human-readable payload:"
+            pprint(dataDict)
+            print "List of measurements as ordered within the device:"
+            pprint(measurements)
+        else:
+            pprint(dataDict)
+    elif args.base64:
+        if args.verbose:
+            payload_dict = test_data_extraction(args.base64)
+        else:
+            payload_dict = extract_payload(args.base64)
+            pprint(payload_dict)            
+    else:
+        print "Check input commands with:\npython CTT_Nodes.py -h"
