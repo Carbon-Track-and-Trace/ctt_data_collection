@@ -41,6 +41,7 @@ myLogLevel = {'debug': logging.DEBUG,
 logging.basicConfig(level=myLogLevel['info'])
 
 MAPIPORT = int(os.environ.get('MAPIPORT', 50000))
+##MAPIPORT_TK = int(os.environ.get('MAPIPORT_TK', 54321))
 CTTDB = os.environ.get('CTT_DB', 'ctt')
 TSTHOSTNAME = os.environ.get('CTT_HOSTNAME', 'localhost')
 TSTUSERNAME = os.environ.get('CTT_USERNAME', 'co2')
@@ -73,7 +74,7 @@ def open_connection(database=CTTDB, port=MAPIPORT, hostname=TSTHOSTNAME,
         sys.exit()
     return db
 
-def backup_DB(backup_path):
+def backup_DB(backup_path, name=""):
     today = datetime.today()
     if not os.path.exists(backup_path):
         os.makedirs(backup_path)
@@ -82,7 +83,7 @@ def backup_DB(backup_path):
     msg = "Dump Schema: enter password for accessing CTT database with user 'co2'"
     logging.info(msg)
     str_time = today.strftime("%Y-%m-%d_%H:%M:%S")
-    filepath = "{path}/{day}\_backupSchemaDB.sql".format(path=backup_path, day=str_time)
+    filepath = "{path}/{day}\_{nm}\_backupSchemaDB.sql".format(path=backup_path,day=str_time,nm=name)
     print filepath
     command = "msqldump --database=ctt --user=co2 --describe > "+ filepath
     print command
@@ -91,7 +92,7 @@ def backup_DB(backup_path):
     # mclient -u co2 -d ctt --dump > /tmp/2016-07-19_dump.sql
     msg = "Dump database: enter password for accessing CTT database with user 'co2'"
     logging.info(msg)
-    filepath = "{path}/{day}\_backupDataDB.sql".format(path=backup_path, day=str_time)
+    filepath = "{path}/{day}\_{nm}\_backupDataDB.sql".format(path=backup_path, day=str_time,nm=name)
     print filepath
     command = "mclient -u co2 -d ctt --dump > " + filepath
     print command
@@ -643,6 +644,7 @@ def add_node_message(db, msg, commit=False):
     missingCols = [sk for sk in labels if sk.lower().strip(' ') not in tableFields]
     for col in missingCols:
         colType = type(msg[col])
+        print col, msg[col], type(msg[col])
         if colType == int:
             mdbColType = "INT"
         elif colType == float:
@@ -664,7 +666,8 @@ def add_node_message(db, msg, commit=False):
     #             'serial_id':serial_id, 'waspmote_id':waspmote_id, 'sequence_Num':sequence_Num}
     #node_msg.update(sensors)
     #fieldsNotNone = [f for f in node_msg.keys() if node_msg[f] != None]
-    fieldsNotNone = [f for f in msg.keys() if msg[f] != None]
+    fieldsNotNone = [f for f in msg.keys() if msg[f] != None and msg[f] == msg[f] ]
+    # The usual way to test for a NaN is to see if it's equal to itself
     node_messages = [dict((k.lower(), msg[k]) for k in fieldsNotNone)]
     if DEBUG:
         msg = "add node message: "

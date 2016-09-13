@@ -103,16 +103,17 @@ def init_data(db_ctt):
                          'accessKey':'LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg='})
 
 def run():
+    nameClientID="VEJLE"
     # Prepare the database
     ## connect to DB
     db_ctt = mdb.open_connection()
     
     ## backup DB if exists
-    #mdb.backup_DB(backup_path="/tmp/")
+    #mdb.backup_DB(backup_path="/tmp/", name=nameClientID)
 
     ## create tables if missing
     #mdb.drop_CTT_tables(db_ctt)
-    db_ctt.commit()
+    #db_ctt.commit()
     mdb.create_CTT_tables(db_ctt)
     db_ctt.commit()
     init_data(db_ctt)
@@ -161,7 +162,7 @@ def run():
     topics = ["70B3D57ED00006CE/devices/+/up"]
     mqtt.set_topics(topics)
     mqtt.set_db(db_ctt)
-    mqtt.ctt_collect_MQTT_msg()
+    mqtt.ctt_collect_MQTT_msg(nameClientID=nameClientID)
     
     # Blocking call that processes network traffic, dispatches callbacks and
     # handles reconnecting.
