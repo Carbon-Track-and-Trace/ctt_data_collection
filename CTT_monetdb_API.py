@@ -666,7 +666,8 @@ def add_node_message(db, msg, commit=False):
     #             'serial_id':serial_id, 'waspmote_id':waspmote_id, 'sequence_Num':sequence_Num}
     #node_msg.update(sensors)
     #fieldsNotNone = [f for f in node_msg.keys() if node_msg[f] != None]
-    fieldsNotNone = [f for f in msg.keys() if msg[f] != None]
+    fieldsNotNone = [f for f in msg.keys() if msg[f] != None and msg[f] == msg[f] ]
+    # The usual way to test for a NaN is to see if it's equal to itself
     node_messages = [dict((k.lower(), msg[k]) for k in fieldsNotNone)]
     if DEBUG:
         msg = "add node message: "

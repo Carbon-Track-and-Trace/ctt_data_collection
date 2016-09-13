@@ -7,9 +7,11 @@
     :copyright: (c) 2016 by Patrick Merlot.
 """
 
+import os
 import paho.mqtt.client as paho
 from pprint import pprint
 import json
+import argparse
 import CTT_monetdb_API as mdb
 import CTT_Nodes
 
@@ -138,12 +140,7 @@ def map_msg_MQTT_to_monetdb(msgMQTT):
     #  u'server_time': u'2016-08-28T21:21:24.72138545Z'}
     
 
-# The callback for when a PUBLISH message is received from the server.
-def on_message(client, userdata, msg):
-    print("\nRx msg: ")
-    print msg.payload
-    msgMQTT = json.loads(msg.payload)
-
+def store_msgMQTT_in_DB(msgMQTT):
     #base64EncodedPayload = CTT_Nodes.decode_msg_payload(msgMQTT['payload'])
     base64EncodedPayload = msgMQTT['payload']
     meta = msgMQTT.pop('metadata')
@@ -162,6 +159,13 @@ def on_message(client, userdata, msg):
         db.commit()        
     else:
         print "DB status is None: restart MonetDB on server)"
+
+# The callback for when a PUBLISH message is received from the server.
+def on_message(client, userdata, msg):
+    print("\nRx msg: ")
+    print msg.payload
+    msgMQTT = json.loads(msg.payload)
+    store_msgMQTT_in_DB(msgMQTT)
 
 # Per topic message callbacks
 def on_message_packets(client, userdata, msg):
@@ -220,9 +224,41 @@ def ctt_collect_MQTT_msg(nameClientID="NTNU"):
 def test_ctt_collect_MQTT_msg():
     ctt_collect_MQTT_msg(nameClientID="AIA")
 
-def main():
-    test_ctt_collect_MQTT_msg()
+
+def collect_MQTT_msgs_from_file(file_path):
+    db_ctt = mdb.open_connection()
+    set_db(db_ctt)
+    mdb.create_CTT_tables(db_ctt)
+    db_ctt.commit()
+    pathFile = os.path.abspath(file_path)
+    print "file: ", pathFile
+    objs = []
+    with open(pathFile) as f:
+        msgs = f.readlines()
+    for msg in msgs:
+        msgMQTT = json.loads(msg.strip())
+        pprint(msgMQTT)
+        store_msgMQTT_in_DB(msgMQTT)
+    # close monetdb connection
+    db_ctt.commit()
+    mdb.close_connection(db_ctt)
+
 
 if __name__ == "__main__": 
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--file_path", type=str,
+                        help="Input file to read data from to be store in DB, \
+                        formatted as dictionaries on each line. \
+                        Check ./MQTT_temp/ for examples.")
+    parser.add_argument("-v", "--verbose", action="store_true",
+                        help="increase output verbosity")
+    args = parser.parse_args()
+    if args.file_path:
+        collect_MQTT_msgs_from_file(args.file_path)
+    else:
+        ## Collect MQTT message from TheThingsNetwork, as user "AIA",
+        ## not "NTNU" to avoid conflicts.
+        ## and try to store the new messages on MonetDB.
+        ## If duplicates found, copies won't be stored
+        ctt_collect_MQTT_msg(nameClientID="AIA")
 
