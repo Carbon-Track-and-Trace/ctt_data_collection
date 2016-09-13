@@ -108,7 +108,7 @@ def run():
     db_ctt = mdb.open_connection()
     
     ## backup DB if exists
-    mdb.backup_DB(backup_path="/tmp/")
+    #mdb.backup_DB(backup_path="/tmp/")
 
     ## create tables if missing
     #mdb.drop_CTT_tables(db_ctt)
