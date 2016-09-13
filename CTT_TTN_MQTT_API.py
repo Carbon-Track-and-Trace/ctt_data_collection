@@ -224,7 +224,27 @@ def ctt_collect_MQTT_msg(nameClientID="NTNU"):
 def test_ctt_collect_MQTT_msg():
     ctt_collect_MQTT_msg(nameClientID="AIA")
 
-def main():
+
+def collect_MQTT_msgs_from_file(file_path):
+    db_ctt = mdb.open_connection()
+    set_db(db_ctt)
+    mdb.create_CTT_tables(db_ctt)
+    db_ctt.commit()
+    pathFile = os.path.abspath(file_path)
+    print "file: ", pathFile
+    objs = []
+    with open(pathFile) as f:
+        msgs = f.readlines()
+    for msg in msgs:
+        msgMQTT = json.loads(msg.strip())
+        pprint(msgMQTT)
+        store_msgMQTT_in_DB(msgMQTT)
+    # close monetdb connection
+    db_ctt.commit()
+    mdb.close_connection(db_ctt)
+
+
+if __name__ == "__main__": 
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file_path", type=str,
                         help="Input file to read data from to be store in DB, \
@@ -234,22 +254,11 @@ def main():
                         help="increase output verbosity")
     args = parser.parse_args()
     if args.file_path:
-        pathFile = os.path.abspath(args.file_path)
-        print "file: ", pathFile
-        objs = []
-        with open(pathFile) as f:
-            msgs = f.readlines()
-        for msg in msgs:
-            msgMQTT = json.loads(msg.strip())
-            pprint(msgMQTT)
-            store_msgMQTT_in_DB(msgMQTT)
+        collect_MQTT_msgs_from_file(args.file_path)
     else:
         ## Collect MQTT message from TheThingsNetwork, as user "AIA",
         ## not "NTNU" to avoid conflicts.
         ## and try to store the new messages on MonetDB.
         ## If duplicates found, copies won't be stored
         ctt_collect_MQTT_msg(nameClientID="AIA")
-
-if __name__ == "__main__": 
-    main()
 

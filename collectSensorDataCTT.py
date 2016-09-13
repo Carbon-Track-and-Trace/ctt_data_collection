@@ -113,7 +113,7 @@ def run():
 
     ## create tables if missing
     #mdb.drop_CTT_tables(db_ctt)
-    db_ctt.commit()
+    #db_ctt.commit()
     mdb.create_CTT_tables(db_ctt)
     db_ctt.commit()
     init_data(db_ctt)
