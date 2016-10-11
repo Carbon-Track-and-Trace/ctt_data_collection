@@ -8649,3 +8649,32 @@ start start monetdbd
 /home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
 /home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
 -h mosquitto_sub.*70B3D57ED00006CE
+
+Wed Oct 12 00:15:01 CEST 2016
+start monetdbd
+start start monetdbd
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+/home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+Wed Oct 12 00:30:01 CEST 2016
+start monetdbd
+start start monetdbd
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+/home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+Wed Oct 12 00:45:01 CEST 2016
+start monetdbd
+start start monetdbd
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+/home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+Wed Oct 12 01:00:01 CEST 2016
+start monetdbd
+start start monetdbd
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+/home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up

@@ -2,7 +2,7 @@ echo `date` >> /home/numascale/scripts/date.txt
 
 
 MONETDBD_TK_PS=`ps -elf | grep "monetdbd start /home/mydbfarm_TK_deploy" | wc -l`
-MONETDBD_TK=`ps -elf | grep "monetdbd start /home/mydbfarm_TK_deploy" | awk '{print $16}'`
+MONETDBD_TK=`ps -elf | grep "monetdbd start /home/mydbfarm_TK_deploy" | awk '{for(i=1;i<15;i++) $i="";print}' | grep -v 'grep'`
 if [ $MONETDBD_TK_PS -ge 1 ];
 then
     echo $MONETDBD_TK >> /home/numascale/scripts/date.txt
@@ -18,7 +18,7 @@ fi
 
 
 MONETDBD_VJ_PS=`ps -elf | grep "monetdbd start /home/mydbfarm/" | wc -l`
-MONETDBD_VJ=`ps -elf | grep "monetdbd start" | awk '{print $16}'`
+MONETDBD_VJ=`ps -elf | grep "monetdbd start /home/mydbfarm/" | awk '{for(i=1;i<15;i++) $i="";print}' | grep -v 'grep'`
 if [ $MONETDBD_VJ_PS -ge 1 ];
 then
     echo $MONETDBD_VJ >> /home/numascale/scripts/date.txt
@@ -51,7 +51,7 @@ then
     echo $VEJLE >> /home/numascale/scripts/date.txt
 else 
     echo "VEJLE script is not running" >> /home/numascale/scripts/date.txt
-    screen -S sensor_collect_VEJLE_deploy -d -m /home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+    #screen -S sensor_collect_VEJLE_deploy -d -m /home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
     mail -s "Vejle script is not running. Restarting." pm@aiascience.com
 fi
 
