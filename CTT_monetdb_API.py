@@ -40,7 +40,7 @@ myLogLevel = {'debug': logging.DEBUG,
               'critical': logging.CRITICAL}
 logging.basicConfig(level=myLogLevel['info'])
 
-MAPIPORT = int(os.environ.get('MAPIPORT', 50000))
+MAPIPORT = 50000 #int(os.environ.get('MAPIPORT', 50000))
 ##MAPIPORT_TK = int(os.environ.get('MAPIPORT_TK', 54321))
 CTTDB = os.environ.get('CTT_DB', 'ctt')
 TSTHOSTNAME = os.environ.get('CTT_HOSTNAME', 'localhost')
