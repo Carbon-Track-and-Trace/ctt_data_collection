@@ -79,10 +79,17 @@ def extract_payload_fromHEX(inHEX_payload_MQTT):
                           "SENSOR_OPC_PM2_5",
                           "SENSOR_OPC_PM10"]
     labelBatteryLevel = ["SENSOR_BAT"]
-
     temp = inHEX_payload_MQTT[36:]
     measurements = []
     labelSensors = []
+
+    # "Just battery, no measurement, possible if level battery < 40%"
+    if len(temp)<5:
+        measurements.append(temp[2:4]) # %Battery
+        measurements[0] = battery_conversion("".join(measurements[0]))
+        labelSensors.extend(labelBatteryLevel)
+        dataDict = dict(zip(labelSensors, measurements))
+        return (dataDict, measurements)
     measurements.append(temp[2:10])  # CO2
     measurements.append(temp[12:20]) # NO2
     measurements.append(temp[22:30]) # Temperature
@@ -108,6 +115,7 @@ def extract_payload_fromHEX(inHEX_payload_MQTT):
         
     else:
         for x in range(0, 5):
+            print x
             measurements[x] = litte_to_big_endian(measurements[x])
             measurements[x] = struct.unpack('!f', measurements[x].decode('hex'))[0]
         measurements[5] = battery_conversion("".join(measurements[5]))
