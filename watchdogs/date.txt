@@ -33026,3 +33026,83 @@ monetdbd start /home/mydbfarm/
 /home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
 mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
 mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+
+Wed Nov 16 22:55:55 CET 2016
+monetdbd start /home/mydbfarm_TK_deploy
+monetdbd start /home/mydbfarm/
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+PROBLEM: VEJLE script is not running
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+
+Wed Nov 16 22:55:59 CET 2016
+monetdbd start /home/mydbfarm_TK_deploy
+monetdbd start /home/mydbfarm/
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+/home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+
+Wed Nov 16 23:00:01 CET 2016
+monetdbd start /home/mydbfarm_TK_deploy
+monetdbd start /home/mydbfarm/
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+/home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+
+Wed Nov 16 23:15:01 CET 2016
+monetdbd start /home/mydbfarm_TK_deploy
+monetdbd start /home/mydbfarm/
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+/home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+
+Wed Nov 16 23:28:02 CET 2016
+monetdbd start /home/mydbfarm_TK_deploy
+monetdbd start /home/mydbfarm/
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+PROBLEM: VEJLE script is not running
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+
+Wed Nov 16 23:30:01 CET 2016
+monetdbd start /home/mydbfarm_TK_deploy
+monetdbd start /home/mydbfarm/
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+/home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+
+Wed Nov 16 23:45:01 CET 2016
+monetdbd start /home/mydbfarm_TK_deploy
+monetdbd start /home/mydbfarm/
+PROBLEM: Trondheim script is not running
+PROBLEM: VEJLE script is not running
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+
+Thu Nov 17 00:00:01 CET 2016
+monetdbd start /home/mydbfarm_TK_deploy
+monetdbd start /home/mydbfarm/
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+PROBLEM: VEJLE script is not running
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+
+Thu Nov 17 00:06:22 CET 2016
+monetdbd start /home/mydbfarm_TK_deploy
+monetdbd start /home/mydbfarm/
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+/home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
+
+Thu Nov 17 00:15:01 CET 2016
+monetdbd start /home/mydbfarm_TK_deploy
+monetdbd start /home/mydbfarm/
+/home/climathon09/ctt_data_collection_TRONDHEIM/collectSensorDataCTT.py
+/home/climathon09/ctt_data_collection_VEJLE/collectSensorDataCTT.py
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED00006CE -P DmaWeq91GIXyqbOWWivU4FEvskLQW1zxdSVt5zy9260= -t 70B3D57ED00006CE/devices/+/up
+mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up mosquitto_sub -h staging.thethingsnetwork.org -p 1883 -u 70B3D57ED0000AD8 -P LJtFqN8NSqHQzDaaZkHVQ+G+KCDJ+fZbptl94NyUXGg= -t 70B3D57ED0000AD8/devices/+/up
