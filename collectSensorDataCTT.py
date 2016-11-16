@@ -159,7 +159,7 @@ def run():
     # include log/notifications when important changes occur
     #  (new device location, new/lost sensor, new gateway for comm., ... )
     #topics = ["nodes/"+nID+"/packets" for nID in node_IDs]
-    topics = ["70B3D57ED00006CE/devices/+/up"]
+    topics = ["70B3D57ED0000AD8/devices/+/up"]
     mqtt.set_topics(topics)
     mqtt.set_db(db_ctt)
     mqtt.ctt_collect_MQTT_msg(nameClientID=nameClientID)

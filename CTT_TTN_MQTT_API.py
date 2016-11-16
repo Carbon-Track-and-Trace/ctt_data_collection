@@ -180,7 +180,7 @@ def ctt_collect_MQTT_msg(nameClientID="NTNU"):
     #             "02032201"]
     # tpcs = ["nodes/"+nID+"/packets" for nID in node_IDs]
     global application
-    application = {'applicationName':'CTT_Vejle',
+    application = {'applicationName':'CTT_Trondheim_Deployment',
                    'brokerHost':'staging.thethingsnetwork.org',
                    'brokerPort':1883,
                    ### Vejle's app
