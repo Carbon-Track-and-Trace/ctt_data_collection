@@ -17,7 +17,8 @@ import struct
 
 
 def extract_payload(base64_payload_MQTT):
-    extract_payload_fromBase64(base64_payload_MQTT)
+    dataDict = extract_payload_fromBase64(base64_payload_MQTT)
+    return dataDict
 
     
 def extract_payload_fromBase64(base64_payload_MQTT):
@@ -43,8 +44,8 @@ def extract_payload_fromBase64(base64_payload_MQTT):
 
 def extract_BINARY_FRAME_fromHEX(inHEX_MQTT):
     dataDict = {}
-    print inHEX_MQTT
-    print inHEX_MQTT.decode('hex')
+    #print inHEX_MQTT
+    #print inHEX_MQTT.decode('hex')
 
     ### Assuming the data frame follows version 12 from Libellium standard
     ### http://www.libelium.com/v12/development/waspmote/documentation/data-frame-guide-v12/
@@ -57,14 +58,14 @@ def extract_BINARY_FRAME_fromHEX(inHEX_MQTT):
                 ('waspmoteID', -1), ## VJCTT01, TKCTT05, ... 7 characters but can't rely on arbitrary choices
                 ('separator', 1),
                 ('frameSequence', 1)]
-    pprint(elements)
+    #pprint(elements)
     header = {}
     for k,length in elements:
         header[k]={}
         header[k]['length'] = length
     startByte = 0
     for k,l in elements:
-        print "\n",k
+        #print "\n",k
         ## treat as STRING
         if k in ['startDelimiter', 'waspmoteID', 'separator']:
             if k == 'waspmoteID': ## special case, since un-predifined length to be determined
@@ -74,8 +75,8 @@ def extract_BINARY_FRAME_fromHEX(inHEX_MQTT):
             header[k]['valueHEX'] = inHEX_MQTT[startByte:startByte+2*header[k]['length']]
             header[k]['value'] = header[k]['valueHEX'].decode('hex')
             startByte += 2 * header[k]['length']
-            print "header[{k}]['length']: {l}".format(k=k,l=header[k]['length'])
-            pprint(header[k]) 
+            #print "header[{k}]['length']: {l}".format(k=k,l=header[k]['length'])
+            #pprint(header[k]) 
         ## treat as INT
         else:
             # remember 1 Byte coded by 2 HEX digits
@@ -84,10 +85,10 @@ def extract_BINARY_FRAME_fromHEX(inHEX_MQTT):
             header[k]['valueDEC'] = int(header[k]['valueHEX'], 16) # assuming having integers only to convert
             #header[k]['valueDEC'] = int(header[k]['valueHEX'], 16) 
             startByte += 2 * header[k]['length']
-            print "header[{k}]['length']: {l}".format(k=k,l=header[k]['length']) 
-            print "startByte: ",startByte
-            pprint(header[k]) 
-    pprint(header)
+            #print "header[{k}]['length']: {l}".format(k=k,l=header[k]['length']) 
+            #print "startByte: ",startByte
+            #pprint(header[k]) 
+    #pprint(header)
     dataDict['header'] = header
 
     # BINARY PAYLOAD (= list of {sensorID + sensorMeasurement})
@@ -144,17 +145,17 @@ def extract_BINARY_FRAME_fromHEX(inHEX_MQTT):
     payloadHEX = inHEX_MQTT[startByte:]
     startByte = 0
     while startByte < len(payloadHEX):
-        print ""
-        print 'len(payloadHEX): ',  len(payloadHEX)
-        print "startByte: ", startByte
-        print 'payloadHEX: ',  payloadHEX
+        #print ""
+        #print 'len(payloadHEX): ',  len(payloadHEX)
+        #print "startByte: ", startByte
+        #print 'payloadHEX: ',  payloadHEX
         measure = {}
         measure['sensorID_HEX'] = payloadHEX[startByte:startByte+2]
         measure['sensorID'] = int(measure['sensorID_HEX'], 16)
-        pprint(measure)
+        #pprint(measure)
         startByte += 2
         match = next((s for s in sensors_v12 if s['sensorID'] ==  measure['sensorID']), None)
-        pprint(match)
+        #pprint(match)
         measure.update(match)
         length_sensorValue = 2*(measure['nbFields']*measure['bytesPerField'])
         measure['sensorValue_HEX'] = payloadHEX[startByte:startByte + length_sensorValue]
@@ -168,14 +169,14 @@ def extract_BINARY_FRAME_fromHEX(inHEX_MQTT):
             ## Little-endian bit ordering use "<" in unpack()
             measure['sensorValue'] = struct.unpack('<f', measure['sensorValue_HEX'].decode('hex'))[0]
         startByte += length_sensorValue
-        print "measure['sensorValue_HEX']: ", measure['sensorValue_HEX']
-        pprint(measure)
+        #print "measure['sensorValue_HEX']: ", measure['sensorValue_HEX']
+        #pprint(measure)
         payload.append(measure)
     dataDict['payload'] = payload
     labels = [l['sensorTag'] for l in payload]
     values = [l['sensorValue'] for l in payload]
     output = dict(zip(labels, values))
-    pprint(output)
+    #pprint(output)
     return output
 
 def extract_info_metadata(metadataDict):
