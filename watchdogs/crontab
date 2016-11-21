@@ -1,7 +1,7 @@
 #run crontab -e
 # m h  dom mon dow   command
-  0 4  *   *   *     ~/scripts/daily_backup.sh > ~/scripts/daily_backup.log 2>&1
-  0 4  *   *   0     ~/scripts/weekly_backup.sh > ~/scripts/weekly_backup.log 2>&1
-  0 4  1   *   *     ~/scripts/monthly_backup.sh > ~/scripts/monthly_backup.log 2>&1
-  0 4  1   1   *     ~/scripts/yearly_backup.sh > ~/scripts/yearly_backup.log 2>&1
-  
+
+0 4  *   *   *     /home/climathon09/ctt_data_collection_VEJLE/watchdogs/daily_backup.sh >/home/climathon09/ctt_data_collection_VEJLE/watchdogs/daily_backup.log 2>&1
+0 4  *   *   0     /home/climathon09/ctt_data_collection_VEJLE/watchdogs/weekly_backup.sh >/home/climathon09/ctt_data_collection_VEJLE/watchdogs/weekly_backup.log 2>&1
+0 4  1   *   *     /home/climathon09/ctt_data_collection_VEJLE/watchdogs/monthly_backup.sh >/home/climathon09/ctt_data_collection_VEJLE/watchdogs/monthly_backup.log 2>&1
+0 4  1   1   *     /home/climathon09/ctt_data_collection_VEJLE/watchdogs/yearly_backup.sh >/home/climathon09/ctt_data_collection_VEJLE/watchdogs/yearly_backup.log 2>&1
