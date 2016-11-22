@@ -7,14 +7,15 @@
 echo `date` - Do a full database dump
 DATE=`date +%Y-%m-%d`;
 PERIOD='yearly'
+mkdir -p /home/climathon09/BACKUPs_CTT/$PERIOD
 
 ## Backup a local database structure without data using ‘msqldump’
-msqldump -p 54321 --database=ctt  --describe | gzip > /home/numascale/BACKUP_MONETDB/$PERIOD/bkp_Structure_TK_$DATE.sql.gz
-msqldump -p 50000 --database=ctt  --describe | gzip > /home/numascale/BACKUP_MONETDB/$PERIOD/bkp_Structure_VJ_$DATE.sql.gz
+msqldump -p 54321 --database=ctt  --describe | gzip > /home/climathon09/BACKUPs_CTT/$PERIOD/bkp_Structure_TK_$DATE.sql.gz
+msqldump -p 50000 --database=ctt  --describe | gzip > /home/climathon09/BACKUPs_CTT/$PERIOD/bkp_Structure_VJ_$DATE.sql.gz
 
 ## Backup a local database with data
-mclient -p 54321 -d ctt --dump | gzip > /home/numascale/BACKUP_MONETDB/$PERIOD/bkp_DUMP_TK_$DATE.sql.gz
-mclient -p 50000 -d ctt --dump | gzip > /home/numascale/BACKUP_MONETDB/$PERIOD/bkp_DUMP_VJ_$DATE.sql.gz
+mclient -p 54321 -d ctt --dump | gzip > /home/climathon09/BACKUPs_CTT/$PERIOD/bkp_DUMP_TK_$DATE.sql.gz
+mclient -p 50000 -d ctt --dump | gzip > /home/climathon09/BACKUPs_CTT/$PERIOD/bkp_DUMP_VJ_$DATE.sql.gz
 
 
 echo `date` - Backup complete

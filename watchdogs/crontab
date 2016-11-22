@@ -1,6 +1,6 @@
 #run crontab -e
 # m h  dom mon dow   command
-
+0,15,30,45 * * * * /home/numascale/BACKUP_DB_scripts/do_every_15_minutes.sh
 0 4  *   *   *     /home/climathon09/ctt_data_collection_VEJLE/watchdogs/daily_backup.sh >/home/climathon09/ctt_data_collection_VEJLE/watchdogs/daily_backup.log 2>&1
 0 4  *   *   0     /home/climathon09/ctt_data_collection_VEJLE/watchdogs/weekly_backup.sh >/home/climathon09/ctt_data_collection_VEJLE/watchdogs/weekly_backup.log 2>&1
 0 4  1   *   *     /home/climathon09/ctt_data_collection_VEJLE/watchdogs/monthly_backup.sh >/home/climathon09/ctt_data_collection_VEJLE/watchdogs/monthly_backup.log 2>&1
