@@ -196,6 +196,15 @@ def add_entries(db, tableName, listDict, commit=True):
     descp = get_description_table(db, tableName)
     #pprint.pprint(descp)
     tableFields = [t[0] for t in descp]
+
+    # Special treatment to remove very small float (e.g. 8.30377437881e-32) and avoid this type of error:
+    # pymonetdb.exceptions.OperationalError: decimal (8.30377437881e-32) doesn't have format (18.3)
+    for entry in listDict:
+        fields = [f for f in entry.keys() if f in tableFields]
+        for f in fields:
+            if type(entry[f]) == float:
+                entry[f] = round(entry[f], 3)
+
     for entry in listDict:
         insert_statement  = 'INSERT INTO {table}'.format(table=tableName)
         fields = [f for f in entry.keys() if f in tableFields]
